@@ -2,8 +2,12 @@
   <div>
     <Header />
     <div id="app" class="row">
-      <AlbumList @album-by-id="getDetailsById" />
+      <AlbumList 
+      @album-by-id="getDetailsById" 
+      :albumsList="[...albumsList]"
+      />
       <AlbumDetails
+        v-if="albumDetails"
         :albumDetails="{ ...albumDetails }"
         @albums-by-title="getAlbumsByTrackTitle"
       />
@@ -12,6 +16,7 @@
         @album-by-id="getDetailsById"
       />
     </div>
+    <Loader :is-visible="isLoading" />
   </div>
 </template>
 
@@ -20,7 +25,7 @@ import AlbumList from "./components/albumList.vue";
 import AlbumDetails from "./components/albumDetails.vue";
 import AlbumsFound from "./components/albumsFound.vue";
 import Header from "./components/header.vue";
-
+import Loader from "./components/loader.vue";
 export default {
   name: "App",
   components: {
@@ -28,34 +33,48 @@ export default {
     AlbumDetails,
     AlbumsFound,
     Header,
+    Loader,
   },
   methods: {
     getDetailsById: function (_id) {
+      this.isLoading = true;
       this.$api({
         method: "get",
         url: `/albums/albumdetails?albumid=${_id}`,
       }).then((res) => {
         console.log(res.data[0]);
         this.albumDetails = res.data[0];
+        this.isLoading = false;
       });
     },
     getAlbumsByTrackTitle: function (_str) {
+      this.isLoading = true;
       this.$api({
         method: "get",
         url: `/albums/titlesearch?str=${_str}`,
       }).then((res) => {
         this.albumsByTitle = res.data;
         console.log(this.albumsByTitle);
+        this.isLoading = false;
       });
     },
   },
+  mounted() {
+    this.isLoading = true;
+    this.$api("albums").then((res) => {
+      console.log(res.data);
+      this.albumsList = res.data;
+      this.isLoading = false;
+    });
+  },
   data: function () {
     return {
+      isLoading: false,
       albumDetails: {},
       albumsByTitle: [],
+      albumsList: [],
     };
   },
-
 };
 </script>
 <style>
@@ -80,6 +99,6 @@ label {
   font-family: "Raleway-Italic";
 }
 body {
-  background-image: url("./assets/white-gray-background.jpg");
+  background-image: url("./assets/seamless5-lighter.jpg");
 }
 </style>
