@@ -61,7 +61,7 @@ export default {
 <style>
 .listdiv {
   overflow-y: auto;
-  height: 1000px;
+  height: 900px;
 }
 .listitem {
   cursor: pointer;

@@ -16,6 +16,7 @@
         @album-by-id="getDetailsById"
       />
     </div>
+    <Footer/>
     <Loader :is-visible="isLoading" />
   </div>
 </template>
@@ -26,6 +27,7 @@ import AlbumDetails from "./components/albumDetails.vue";
 import AlbumsFound from "./components/albumsFound.vue";
 import Header from "./components/header.vue";
 import Loader from "./components/loader.vue";
+import Footer from "./components/footer.vue";
 export default {
   name: "App",
   components: {
@@ -34,6 +36,7 @@ export default {
     AlbumsFound,
     Header,
     Loader,
+    Footer
   },
   methods: {
     getDetailsById: function (_id) {
